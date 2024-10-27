@@ -37,7 +37,7 @@ end
 Create a `state` field (or a custom name) for the module you want to apply a 
 state machine to, and ensure it's declared as part of your defstruct.
 
-If using a Phoenix model, add it to the schema as a `string` and include it in 
+If using an Ecto struct, add a state field to the schema as a `:string` and include it in 
 the `changeset/2` function:
 
 ```elixir
@@ -67,7 +67,7 @@ Then import `Machinery` in this new module and declare states as arguments.
 Machinery expects a `Keyword` as an argument with the keys `field`, `states` 
 and `transitions`.
 
-- `field`: An atom representing your state field name (defaults to `state`)
+- `field`: An atom representing your state field name (defaults to `:state`)
 - `states`: A `List` of strings representing each state.
 - `transitions`: A Map for each state and its allowed next state(s).
 
@@ -76,7 +76,7 @@ and `transitions`.
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    field: :custom_state_name, # Optional, default value is `:field`
+    field: :custom_state_name, # Optional, default value is `:state`
     states: ["created", "partial", "completed", "canceled"],
     transitions: %{
       "created" =>  ["partial", "completed"],
@@ -93,7 +93,7 @@ state to a specific one.
 
 To transition a struct to another state, call `Machinery.transition_to/3` or `Machinery.transition_to/4`.
 
-### `Machinery.transition_to/3` or ``Machinery.transition_to/4`
+### `Machinery.transition_to/3` or `Machinery.transition_to/4`
 
 It takes the following arguments:
 
@@ -121,7 +121,7 @@ user = Accounts.get_user!(1)
 
 ## Persist State
 
-To persist the struct and state transition, you declare a `persist/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)*
+To persist the struct and state transition, you declare a `persist/2` or `/3` *(in case you want to access metadata passed on `transition_to/4`)*
 function in the state machine module. 
 
 This function will receive the unchanged `struct` as the first argument and a 
@@ -151,7 +151,7 @@ end
 
 ## Logging Transitions
 
-To log transitions, Machinery provides a `log_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)*
+To log transitions, Machinery provides a `log_transition/2` or `/3` *(in case you want to access metadata passed on `transition_to/4`)*
 callback that is called on every transition, after the `persist` function is executed.
 
 This function receives the unchanged `struct` as the first 
@@ -181,7 +181,7 @@ end
 
 ## Guard functions
 
-Create guard conditions by adding `guard_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)* 
+Create guard conditions by adding `guard_transition/2` or `/3` *(in case you want to access metadata passed on `transition_to/4`)* 
 function signatures to the state machine module.
 This function receives two arguments: the `struct` and a `string` of the state it 
 will transition to. 
@@ -234,8 +234,8 @@ Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
 You can also use before and after callbacks to handle desired side effects and 
 reactions to a specific state transition.
 
-You can declare `before_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)* 
-and `after_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)*, 
+You can declare `before_transition/2` or `/3` *(in case you want to access metadata passed on `transition_to/4`)* 
+and `after_transition/2` or `/3` *(in case you want to access metadata passed on `transition_to/4`)*, 
 pattern matching the desired state you want to.
 
 **Before and After callbacks should return the struct.**
